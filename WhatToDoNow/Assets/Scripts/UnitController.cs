@@ -10,12 +10,18 @@ public class UnitController : MonoBehaviour
 
     public Vector3 Velocity = new Vector3();
 
+    Animator animator;
+    bool isFacingRight = true;
+
+    bool isDead = false;
     float health;
     float attackTime = 0f;
     float moveTime = 0f;
 
     void Start()
     {
+        animator = GetComponentInChildren<Animator>();
+
         health = maxHealth;
     }
 
@@ -30,13 +36,22 @@ public class UnitController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isDead)
+            return;
+
         if (moveTime <= 0)
             rigidbody.velocity = Velocity * speed * Time.deltaTime;
+
+        float dirSpeed = rigidbody.velocity.x;
+        animator.SetFloat("Speed", Mathf.Max(Mathf.Abs(dirSpeed), Mathf.Abs(rigidbody.velocity.z)));
+        if (dirSpeed > 0 && !isFacingRight ||
+            dirSpeed < 0 && isFacingRight)
+            Flip();
     }
 
     public bool CanAttack()
     {
-        return attackTime <= 0;
+        return !isDead && attackTime <= 0;
     }
 
     public void Attack()
@@ -48,6 +63,24 @@ public class UnitController : MonoBehaviour
             attackTime = attackCooldown;
 
             // TODO Attack
+        }
+    }
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
+
+    public void RecieveDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            health = 0;
+            isDead = true;
+            animator.SetBool("IsDead", true);
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class AiController : MonoBehaviour
 {
+    public float attackDistance;
+
     UnitController controller;
     Transform player;
 
@@ -15,7 +17,11 @@ public class AiController : MonoBehaviour
     }
 
     void Update()
-    {        
+    {
+        if (Vector3.Distance(transform.position, player.position) < attackDistance)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<UnitController>().RecieveDamage(1);
+        }
     }
 
     IEnumerator DirectionUpdate()
