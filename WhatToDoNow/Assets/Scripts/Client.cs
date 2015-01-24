@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Net.Sockets;
 using System.Text;
@@ -7,98 +8,120 @@ using System;
 using System.Net;
 
 public class Client : MonoBehaviour {
+    private int A = 0;
+    private int B = 0;
+    private int direction = 0;
+
+    Vector3 rotateTop = new Vector3(0,0,0);
+    Vector3 rotateLeft = new Vector3(0,0,90);
+    Vector3 rotateBot = new Vector3(0,0,180);
+    Vector3 rotateRight = new Vector3(0,0,270);
 
     private bool mRunning;
     public static string msg = "";
 
+    private Socket sender;
     public Thread mThread;
+    GameObject rotatedJoystick;
 
     public void ThreadSend(string message)
     {
         Debug.Log(message);
-       // mRunning = true;
-       // mThread = new Thread(() => Send(message));
-       // mThread.Start();
-       // print("Thread done...");
+        mRunning = true;
+        mThread = new Thread(() => Send(message));
+        mThread.Start();
+        print("Thread done...");
     }
 
 	// Use this for initialization
-    void Awake()
+    void Start()
     {
-        ThreadSend("This is a test");
+        rotatedJoystick = GameObject.Find("Joy_Rot_Button");
+        rotatedJoystick.SetActive(false);
+        IPAddress ipAddress = IPAddress.Parse("10.10.8.155");
+        IPEndPoint remoteEP = new IPEndPoint(ipAddress,1234);
+        sender = new Socket(AddressFamily.InterNetwork, 
+            SocketType.Stream, ProtocolType.Tcp );
+        sender.Connect(remoteEP);
+        Debug.Log(String.Format("Socket connected to {0}",
+                sender.RemoteEndPoint.ToString()));
+        Debug.Log("Start");
+        Send("This is a test");
 	}
 
     public void ABtnSend()
     {
-        ThreadSend("A");
+        A = 1;
+        Send();
+        A = 0;
     }
 
     public void BBtnSend()
     {
-        ThreadSend("B");
+        B = 1;
+        Send();
+        B = 0;
     }
 
 
     public void TopBtnSend()
     {
-        ThreadSend("1");
+        Debug.Log("joy top");
+        direction = 1;
+        rotatedJoystick.transform.rotation = Quaternion.Euler(rotateTop);
+        rotatedJoystick.SetActive(true);
+        Send();
     }
 
+    public void JoystickOff()
+    {
+        direction = 0;
+        rotatedJoystick.SetActive(false);
+        Debug.Log("joy off");
+    }
 
     public void RightBtnSend()
     {
-        ThreadSend("2");
+        direction = 2;
+        rotatedJoystick.transform.rotation = Quaternion.Euler(rotateRight);
+        rotatedJoystick.SetActive(true);
+        Send();
     }
 
 
     public void DownBtnSend()
     {
-        ThreadSend("3");
+        direction = 3;
+        rotatedJoystick.SetActive(true);
+        rotatedJoystick.transform.rotation = Quaternion.Euler(rotateBot);
+        Send();
     }
 
 
     public void LeftBtnSend()
     {
-        ThreadSend("4");
+        direction = 4;
+        rotatedJoystick.transform.rotation = Quaternion.Euler(rotateLeft);
+        rotatedJoystick.SetActive(true);
+        Send();
     }
 
     void Send(string message)
     {
-        IPAddress ipAddress = IPAddress.Parse("10.10.8.39");
-        IPEndPoint remoteEP = new IPEndPoint(ipAddress,1234);
-
-        Socket sender = new Socket(AddressFamily.InterNetwork, 
-            SocketType.Stream, ProtocolType.Tcp );
-
-        try {
-            sender.Connect(remoteEP);
-
-            Debug.Log(String.Format("Socket connected to {0}",
-                sender.RemoteEndPoint.ToString()));
-
             // Encode the data string into a byte array.
             byte[] msg = Encoding.ASCII.GetBytes(message + "<EOF>");
-
             // Send the data through the socket.
             int bytesSent = sender.Send(msg);
+    }
 
-            //byte[] bytes = new byte[10000];
-            // Receive the response from the remote device.
-            //int bytesRec = sender.Receive(bytes);
-            //Debug.Log(String.Format("Echoed test = {0}",
-            //    Encoding.ASCII.GetString(bytes,0,bytesRec)));
-
-            // Release the socket.
-            sender.Shutdown(SocketShutdown.Both);
-            sender.Close();
-                
-        } catch (ArgumentNullException ane) {
-            Debug.Log(String.Format("ArgumentNullException : {0}",ane.Message));
-        } catch (SocketException se) {
-            Debug.Log(String.Format("SocketException : {0}",se.Message));
-        } catch (Exception e) {
-            Debug.Log(String.Format("Unexpected exception : {0}", e.Message));
-        }
+    void Send()
+    {
+        string message = direction.ToString() + "," + A.ToString() + "," + B.ToString();
+        // Encode the data string into a byte array.
+        byte[] msg = Encoding.ASCII.GetBytes(message + "<EOF>");
+        Debug.Log(message);
+        // Send the data through the socket.
+        int bytesSent = sender.Send(msg);
     }
 	
 	// Update is called once per frame
@@ -108,6 +131,7 @@ public class Client : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        mThread.Join(500);
+        sender.Shutdown(SocketShutdown.Both);
+        sender.Close();
     }
 }
