@@ -62,3 +62,14 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# UnityVS
+WhatToDoNow/Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll.meta
+WhatToDoNow/Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll
+WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Messaging.dll
+WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Messaging.dll.meta
+WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll.meta
+WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll
+WhatToDoNow/UnityVS.WhatToDoNow.CSharp.csproj
+WhatToDoNow/UnityVS.WhatToDoNow.sln
+WhatToDoNow/UnityVS.WhatToDoNow.v11.suo
