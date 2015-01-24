@@ -36,6 +36,10 @@ public class Client : MonoBehaviour {
 	// Use this for initialization
     void Start()
     {
+        GameObject pColor = GameObject.Find("Player_Color");
+        pColor.GetComponent<Image>().color = new Color(0, 0, 0);
+        GameObject pName = GameObject.Find("Player_Name");
+        pName.GetComponent<Text>().text = "Ururu";
         rotatedJoystick = GameObject.Find("Joy_Rot_Button");
         rotatedJoystick.SetActive(false);
         IPAddress ipAddress = IPAddress.Parse("10.10.8.155");
