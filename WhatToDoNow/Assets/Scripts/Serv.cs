@@ -13,17 +13,19 @@ public class Serv : MonoBehaviour
 
     private List<Socket> clients = new List<Socket>();
     public Dictionary<int, String> clientNames = new Dictionary<int, string>();
+    public List<UserKeys> ukeys = new List<UserKeys>();
+    //private static object _lock = new object();
 
     private bool mRunning;
 
     public Thread mThread;
     public TcpListener tcp_Listener = null;
 
-    public List<UserKeys> ukeys = new List<UserKeys>();
+    public char currentWeapon;
     void Awake()
     {
         mRunning = true;
-        ThreadStart ts = new ThreadStart(Receive);
+        ThreadStart ts = new ThreadStart(ListenClients);// (Receive);
         mThread = new Thread(ts);
         mThread.Start();
         Debug.Log("Thread done...");
@@ -59,6 +61,7 @@ public class Serv : MonoBehaviour
             Thread.Sleep(100);
         }
     }
+    
     void WorkWithClient(Socket s, int num)
     {
         byte[] tempbuffer = new byte[10000];
@@ -68,16 +71,17 @@ public class Serv : MonoBehaviour
         Debug.Log("Recieved: " + strResult);
         clientNames.Add(num, "Player" + num); //strResult);
         SendColor(s, num);
-
+        
         while(true) // нехорошо, ну и хрен с ними
         {
             s.Receive(tempbuffer); // received byte array from client
             strResult = Encoding.ASCII.GetString(tempbuffer);
             Debug.Log("Recieved: " + strResult);
-            lock (ukeys)
+            /*lock (ukeys)
+            //lock(((ICollection)ukeys).SyncRoot)
             {
                 ukeys[num].ReRead(strResult);
-            }
+            }*/
         }
     }
     void ListenClients()
@@ -126,4 +130,5 @@ public class Serv : MonoBehaviour
     {
         s.Send(Encoding.ASCII.GetBytes(text));
     }
+
 }

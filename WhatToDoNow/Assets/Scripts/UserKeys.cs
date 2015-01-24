@@ -31,6 +31,7 @@ public class UserKeys// : MonoBehaviour
     public UserKeys(String str)
     {
         List<String> lst = str.Split(',').ToList();
+        lst.Remove("");
         moveX = Convert.ToDouble(lst[0]);
         moveY = Convert.ToDouble(lst[1]);
         numButton = Convert.ToInt32(lst[2]);
@@ -39,9 +40,10 @@ public class UserKeys// : MonoBehaviour
     public void ReRead(String str)
     {
         List<String> lst = str.Split(',').ToList();
+        lst.Remove("");
         moveX = Convert.ToDouble(lst[0]);
         moveY = Convert.ToDouble(lst[1]);
-        numButton = Convert.ToInt32(lst[2]);
+        numButton = Convert.ToInt32(lst[2] == "B" ? 2 : lst[2] == "A"? 1:0);
         dt = DateTime.Now;
     }
 }
