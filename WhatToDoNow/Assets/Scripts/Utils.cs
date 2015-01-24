@@ -5,6 +5,6 @@ public static class Utils
 {
     public static Color RandomColor()
     {
-        return Color.red;
+        return new Color(Random.value, Random.value, Random.value);
     }
 }

@@ -50,6 +50,11 @@ public class Serv : MonoBehaviour
                 Debug.Log("Recieved: " + strResult);
                 SendColor(s, clients.Count - 1);
             }
+
+            foreach (var s in clients)
+            {
+                
+            }
             Thread.Sleep(100);
         }
     }
@@ -69,7 +74,7 @@ public class Serv : MonoBehaviour
     {
         Debug.Log("Sending...");
         Color color = number < playerColors.Count ? playerColors[number] : Utils.RandomColor();
-        SendText(s, "COLOR " + color.r + " " + color.g + " " + color.b);
+        SendText(s, NetUtils.ColorMessage(color));
         Debug.Log("Sent!");
     }
 
