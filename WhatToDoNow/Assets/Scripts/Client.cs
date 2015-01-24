@@ -15,10 +15,11 @@ public class Client : MonoBehaviour {
 
     public void ThreadSend(string message)
     {
-        mRunning = true;
-        mThread = new Thread(() => Send(message));
-        mThread.Start();
-        print("Thread done...");
+        Debug.Log(message);
+       // mRunning = true;
+       // mThread = new Thread(() => Send(message));
+       // mThread.Start();
+       // print("Thread done...");
     }
 
 	// Use this for initialization
@@ -27,9 +28,38 @@ public class Client : MonoBehaviour {
         ThreadSend("This is a test");
 	}
 
-    public void BtnSend()
+    public void ABtnSend()
+    {
+        ThreadSend("A");
+    }
+
+    public void BBtnSend()
+    {
+        ThreadSend("B");
+    }
+
+
+    public void TopBtnSend()
     {
         ThreadSend("1");
+    }
+
+
+    public void RightBtnSend()
+    {
+        ThreadSend("2");
+    }
+
+
+    public void DownBtnSend()
+    {
+        ThreadSend("3");
+    }
+
+
+    public void LeftBtnSend()
+    {
+        ThreadSend("4");
     }
 
     void Send(string message)
