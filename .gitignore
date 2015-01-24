@@ -73,3 +73,6 @@ WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll
 *.csproj
 *.sln
 *.suo
+WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll.meta
+WhatToDoNow/Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll.meta
+WhatToDoNow/Assets/UnityVS/Editor/SyntaxTree.VisualStudio.Unity.Messaging.dll.meta
