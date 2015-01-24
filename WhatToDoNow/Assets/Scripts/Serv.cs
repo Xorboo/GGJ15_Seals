@@ -12,12 +12,14 @@ public class Serv : MonoBehaviour
     public List<Color> playerColors;
 
     private List<Socket> clients = new List<Socket>();
+    public Dictionary<int, String> clientNames = new Dictionary<int, string>();
+
     private bool mRunning;
-    public static string msg = "";
 
     public Thread mThread;
     public TcpListener tcp_Listener = null;
 
+    public List<UserKeys> ukeys = new List<UserKeys>();
     void Awake()
     {
         mRunning = true;
@@ -31,7 +33,6 @@ public class Serv : MonoBehaviour
     {
         mRunning = false;
     }
-
     void Receive()
     {
         tcp_Listener = new TcpListener(IPAddress.Any, 1234);
@@ -54,6 +55,49 @@ public class Serv : MonoBehaviour
             foreach (var s in clients)
             {
                 
+            }
+            Thread.Sleep(100);
+        }
+    }
+    void WorkWithClient(Socket s, int num)
+    {
+        byte[] tempbuffer = new byte[10000];
+        string strResult = "";
+        s.Receive(tempbuffer); // received byte array from client
+        strResult = Encoding.ASCII.GetString(tempbuffer);
+        Debug.Log("Recieved: " + strResult);
+        clientNames.Add(num, "Player" + num); //strResult);
+        SendColor(s, num);
+
+        while(true) // нехорошо, ну и хрен с ними
+        {
+            s.Receive(tempbuffer); // received byte array from client
+            strResult = Encoding.ASCII.GetString(tempbuffer);
+            Debug.Log("Recieved: " + strResult);
+            lock (ukeys)
+            {
+                ukeys[num].ReRead(strResult);
+            }
+        }
+    }
+    void ListenClients()
+    {
+        UserKeys el = new UserKeys("0,0,0");
+        tcp_Listener = new TcpListener(IPAddress.Any, 1234);
+        tcp_Listener.Start();
+        Debug.Log("Server Start");
+        int num=0;
+        Thread thread;
+        while (mRunning)
+        {
+            if (tcp_Listener.Pending())
+            {
+                Socket s = tcp_Listener.AcceptSocket();
+                clients.Add(s);
+                ukeys.Add(el);
+                thread = new Thread(() => WorkWithClient(s,num));
+                Debug.Log("Create new thread "+num+"; with socket"+s);
+                num++;
             }
             Thread.Sleep(100);
         }
