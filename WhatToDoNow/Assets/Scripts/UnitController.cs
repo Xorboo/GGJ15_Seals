@@ -1,12 +1,26 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+
+[Serializable]
+public class AttackType
+{
+    public string trigger;
+    public float cooldown;
+    public float instantiateTimeout;
+    public GameObject bullet;
+    public Vector3 position;
+    public float destroyTime;
+}
 
 public class UnitController : MonoBehaviour
 {
     public float speed = 120;
     public float moveAfterAttackPause = 0.4f;
-    public float attackCooldown = 0.7f;
     public float maxHealth = 100;
+    public bool isPlayer = false;
+    public List<AttackType> attacks = new List<AttackType>();
 
     public Vector3 Velocity = new Vector3();
 
@@ -54,18 +68,37 @@ public class UnitController : MonoBehaviour
         return !isDead && attackTime <= 0;
     }
 
-    public void Attack()
+    public void Attack(string trigger)
     {
-        if (CanAttack())
+        var attack = attacks.Find(a => a.trigger == trigger);
+        if (attack != null &&  CanAttack())
         {
+            Debug.Log((isPlayer ? "Player" : "Bot") + " attacks with: " + attack.trigger);
             rigidbody.velocity = new Vector3();
             moveTime = moveAfterAttackPause;
-            attackTime = attackCooldown;
+            attackTime = attack.cooldown;
 
             // TODO Attack
-
+            animator.SetTrigger(attack.trigger);
+            StartCoroutine("InstantiateAttack", attack);
         }
     }
+
+    IEnumerator InstantiateAttack(AttackType attack)
+    {
+        yield return new WaitForSeconds(attack.instantiateTimeout);
+
+        Vector3 pos = transform.position;
+        pos.x += attack.position.x * transform.localScale.x;
+        pos.y += attack.position.y * transform.localScale.y;
+        pos.z += attack.position.z * transform.localScale.z;
+        var obj = Instantiate(attack.bullet, pos, Quaternion.identity) as GameObject;
+
+        obj.transform.parent = transform;
+        obj.tag = isPlayer ? "PlayerAttack" : "BotAttack";
+        Destroy(obj, attack.destroyTime);
+    }
+
     private void Flip()
     {
         isFacingRight = !isFacingRight;
@@ -77,6 +110,7 @@ public class UnitController : MonoBehaviour
     public void RecieveDamage(float damage)
     {
         health -= damage;
+        Debug.Log("Recieved damage: " + damage + ";   health: " + health);
         if (health <= 0)
         {
             health = 0;

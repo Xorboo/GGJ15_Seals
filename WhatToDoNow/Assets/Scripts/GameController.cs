@@ -3,11 +3,18 @@ using System.Collections;
 
 public class GameController : MonoBehaviour
 {
+    public bool initServer;
+
     Serv server;
 
     void Awake()
     {
         server = GetComponent<Serv>();
+
+        if (initServer)
+        {
+            server.StartServer();
+        }
     }
 
 

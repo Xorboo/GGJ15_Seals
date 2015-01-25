@@ -21,7 +21,7 @@ public class AiController : MonoBehaviour
         if (Vector3.Distance(transform.position, player.position) < attackDistance)
         {
             if (controller.CanAttack())
-                controller.Attack();
+                controller.Attack(controller.attacks[0].trigger);
         }
     }
 

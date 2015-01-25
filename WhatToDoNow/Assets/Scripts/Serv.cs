@@ -22,7 +22,8 @@ public class Serv : MonoBehaviour
     public TcpListener tcp_Listener = null;
 
     public char currentWeapon;
-    void Awake()
+
+    public void StartServer()
     {
         mRunning = true;
         ThreadStart ts = new ThreadStart(ListenClients);// (Receive);

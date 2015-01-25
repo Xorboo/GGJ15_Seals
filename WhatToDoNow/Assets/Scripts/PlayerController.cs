@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Start() {
         controller = GetComponent<UnitController>();
+        controller.isPlayer = true;
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         StartCoroutine("MoveCoroutine");
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour {
     {
         while (true)
         {
-            UpdateControls();
+            UpdateControlsKeyboard();
             yield return new WaitForSeconds(moveUpdateTime);
         }
     }
@@ -46,7 +47,7 @@ public class PlayerController : MonoBehaviour {
         if (controller.CanAttack())
         {
             if (Input.GetMouseButton(0))
-                controller.Attack();
+                controller.Attack(controller.attacks[0].trigger);
         }
     }
 }
