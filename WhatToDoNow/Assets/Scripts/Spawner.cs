@@ -15,7 +15,18 @@ public class Wave
 public class Spawner : MonoBehaviour {
 
     public List<Wave> lstWave = new List<Wave>();
-    public float moveUpdateTime=20f;
+    public float nextWaveTime = 2f;
+    public float timeBetwenSpawns = 1f;
+
+    public GameObject meleeObj, 
+                      rangeObj, 
+                      bossObj;
+    public Vector3 vec1PositionEnemy,
+                   vec2PositionEnemy,
+                   vec3PositionEnemy,
+                   vec4PositionEnemy;
+    private float maxX = 2, minX = 4,
+                  maxY = 1, minY = 3;
 	// Use this for initialization
 	void Start () {
 
@@ -28,29 +39,34 @@ public class Spawner : MonoBehaviour {
         //while (true)
         for(int i=0; i<lstWave.Count; i++)
         {
-            StartWave(i);
-            yield return new WaitForSeconds(moveUpdateTime);
+            int melee = lstWave[i].melee;
+            int range = lstWave[i].range;
+            int boss = lstWave[i].boss;
+            for (int j = 0; j < melee; j++)
+            {
+                //Vector3 pos = transform.position;
+                /*pos.x += attack.position.x * transform.localScale.x;
+                pos.y += attack.position.y * transform.localScale.y;
+                pos.z += attack.position.z * transform.localScale.z;*/
+                //var obj = Instantiate(attack.bullet, pos, Quaternion.identity) as GameObject;
+                //obj.transform.localScale = transform.localScale;
+                Instantiate(meleeObj, vec1PositionEnemy, Quaternion.identity);
+                yield return new WaitForSeconds(timeBetwenSpawns);
+            }
+            for (int j = 0; j < range; j++)
+            {
+                Instantiate(rangeObj, vec2PositionEnemy, Quaternion.identity);
+                yield return new WaitForSeconds(timeBetwenSpawns);
+            }
+            for (int j = 0; j < boss; j++)
+            {
+                Instantiate(bossObj, vec3PositionEnemy, Quaternion.identity);
+                yield return new WaitForSeconds(timeBetwenSpawns);
+            }
+            yield return new WaitForSeconds(nextWaveTime);
         }
     }
-    void StartWave(int num)
-    {
-        //lstWave[num];
-        int melee = lstWave[num].melee;
-        int range = lstWave[num].range;
-        int boss = lstWave[num].boss;
-        for (int i=0; i < melee; i++)
-        {
-            //Instantiate(melee);
-        }
-        for (int i = 0; i < range; i++)
-        {
-            //Instantiate(range);
-        }
-        for (int i = 0; i < boss; i++)
-        {
-            //Instantiate(boss);
-        }
-    }
+
     // Update is called once per frame
     void Update()
     {
