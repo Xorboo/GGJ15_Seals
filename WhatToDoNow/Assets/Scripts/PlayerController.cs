@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
     {
         while (true)
         {
-            UpdateControls();
+            UpdateControlsKeyboard();
             if (controller.CanAttack())
             {
                 bool pressShoot = gameController.GetButtonPressed(2, buttonPressTime);
