@@ -74,7 +74,7 @@ public class Serv : MonoBehaviour
         Debug.Log("Recieved0: " + strResult);
         clientNames.Add(num, "Player" + num); //strResult);
         Debug.Log("Player" + num);
-        //SendColor(s, num);
+        SendColor(s, num);
         //strResult = "";
         //UserKeys uk = new UserKeys();
         while(true) // нехорошо, ну и хрен с ними
