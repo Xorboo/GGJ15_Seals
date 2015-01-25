@@ -20,7 +20,8 @@ public class AiController : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, player.position) < attackDistance)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<UnitController>().RecieveDamage(1);
+            if (controller.CanAttack())
+                controller.Attack(controller.attacks[0].trigger);
         }
     }
 

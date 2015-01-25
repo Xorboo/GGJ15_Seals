@@ -7,18 +7,14 @@ public class PlayerController : MonoBehaviour {
 
     UnitController controller;
     GameController gameController;
-	// Use this for initialization
+
 	void Start() {
         controller = GetComponent<UnitController>();
+        controller.isPlayer = true;
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         StartCoroutine("MoveCoroutine");
 	}
-
-    void Update()
-    {
-    }
-
 
     IEnumerator MoveCoroutine()
     {
@@ -51,7 +47,7 @@ public class PlayerController : MonoBehaviour {
         if (controller.CanAttack())
         {
             if (Input.GetMouseButton(0))
-                controller.Attack();
+                controller.Attack(controller.attacks[0].trigger);
         }
     }
 }
