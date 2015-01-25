@@ -4,9 +4,12 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
     public float moveUpdateTime;
     public float buttonPressTime;
+    public float weaponSwitchPause;
 
     UnitController controller;
     GameController gameController;
+
+    int currentAttack = 0;
 
 	void Start() {
         controller = GetComponent<UnitController>();
@@ -20,7 +23,33 @@ public class PlayerController : MonoBehaviour {
     {
         while (true)
         {
-            UpdateControlsKeyboard();
+            UpdateControls();
+            if (controller.CanAttack())
+            {
+                bool pressShoot = gameController.GetButtonPressed(2, buttonPressTime);
+                bool pressSwitch = gameController.GetButtonPressed(1, buttonPressTime);
+
+                if (pressShoot && pressSwitch)
+                {
+                    if (Random.value <= 0.5)
+                        pressShoot = false;
+                    else
+                        pressSwitch = false;
+                }
+
+                if (pressShoot)
+                    controller.Attack(controller.attacks[0].trigger);
+
+                if (pressSwitch)
+                {
+                    if (controller.SwitchWeapon())
+                    {
+                        controller.SetAttackPause(weaponSwitchPause);
+                        currentAttack = (currentAttack + 1) % controller.attacks.Count;
+                    }
+                }
+
+            }
             yield return new WaitForSeconds(moveUpdateTime);
         }
     }

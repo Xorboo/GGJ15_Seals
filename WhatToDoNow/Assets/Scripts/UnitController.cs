@@ -24,7 +24,9 @@ public class UnitController : MonoBehaviour
 
     public Vector3 Velocity = new Vector3();
 
-    Animator animator;
+    Animator animatorMove;
+    Animator animatorAttack; // null for mobs
+
     bool isFacingRight = true;
 
     bool isDead = false;
@@ -34,7 +36,11 @@ public class UnitController : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponentInChildren<Animator>();
+        animatorMove = transform.Find("MoveSprite").GetComponent<Animator>();
+        if (isPlayer)
+        {
+            animatorAttack = transform.Find("AttackSprite").GetComponent<Animator>();
+        }
 
         health = maxHealth;
     }
@@ -57,10 +63,15 @@ public class UnitController : MonoBehaviour
             rigidbody.velocity = Velocity * speed * Time.deltaTime;
 
         float dirSpeed = rigidbody.velocity.x;
-        animator.SetFloat("Speed", Mathf.Max(Mathf.Abs(dirSpeed), Mathf.Abs(rigidbody.velocity.z)));
+        animatorMove.SetFloat("Speed", Mathf.Max(Mathf.Abs(dirSpeed), Mathf.Abs(rigidbody.velocity.z)));
         if (dirSpeed > 0 && !isFacingRight ||
             dirSpeed < 0 && isFacingRight)
             Flip();
+    }
+
+    public void SetAttackPause(float pause)
+    {
+        attackTime = pause;
     }
 
     public bool CanAttack()
@@ -78,7 +89,7 @@ public class UnitController : MonoBehaviour
             moveTime = moveAfterAttackPause;
             attackTime = attack.cooldown;
 
-            // TODO Attack
+            var animator = isPlayer ? animatorAttack : animatorMove;
             animator.SetTrigger(attack.trigger);
             StartCoroutine("InstantiateAttack", attack);
         }
@@ -115,7 +126,21 @@ public class UnitController : MonoBehaviour
         {
             health = 0;
             isDead = true;
-            animator.SetBool("IsDead", true);
+            animatorMove.SetBool("IsDead", true);
+            if (animatorAttack != null)
+                animatorAttack.SetBool("IsDead", true);
         }
+    }
+
+    public bool SwitchWeapon()
+    {
+        if (animatorAttack.GetCurrentAnimatorStateInfo(0).IsName("Katana Idle") ||
+            animatorAttack.GetCurrentAnimatorStateInfo(0).IsName("Gun Idle") ||
+            animatorAttack.GetCurrentAnimatorStateInfo(0).IsName("Grenade Idle"))
+        {
+            animatorAttack.SetTrigger("SwitchWeapon");
+            return true;
+        }
+        return false;
     }
 }
