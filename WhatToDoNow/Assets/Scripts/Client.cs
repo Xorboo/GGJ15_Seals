@@ -113,7 +113,7 @@ public class Client : MonoBehaviour {
     void Send(string message)
     {
             // Encode the data string into a byte array.
-            byte[] msg = Encoding.ASCII.GetBytes(message + "<EOF>");
+            byte[] msg = Encoding.ASCII.GetBytes(message + ",<EOF>");
             // Send the data through the socket.
             int bytesSent = sender.Send(msg);
     }
@@ -122,7 +122,7 @@ public class Client : MonoBehaviour {
     {
         string message = direction.ToString() + "," + A.ToString() + "," + B.ToString();
         // Encode the data string into a byte array.
-        byte[] msg = Encoding.ASCII.GetBytes(message + "<EOF>");
+        byte[] msg = Encoding.ASCII.GetBytes(message + ",<EOF>");
         Debug.Log(message);
         // Send the data through the socket.
         int bytesSent = sender.Send(msg);
