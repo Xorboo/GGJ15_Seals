@@ -17,7 +17,6 @@ public class Client : MonoBehaviour {
     Vector3 rotateBot = new Vector3(0,0,180);
     Vector3 rotateRight = new Vector3(0,0,270);
 
-    private bool mRunning;
     public static string msg = "";
 
     private Socket sender;
@@ -27,7 +26,6 @@ public class Client : MonoBehaviour {
     public void ThreadSend(string message)
     {
         Debug.Log(message);
-        mRunning = true;
         mThread = new Thread(() => Send(message));
         mThread.Start();
         print("Thread done...");
@@ -37,7 +35,6 @@ public class Client : MonoBehaviour {
     void Start()
     {
         GameObject pColor = GameObject.Find("Player_Color");
-        pColor.GetComponent<Image>().color = new Color(0, 0, 0);
         GameObject pName = GameObject.Find("Player_Name");
         pName.GetComponent<Text>().text = "Ururu";
         rotatedJoystick = GameObject.Find("Joy_Rot_Button");
@@ -51,6 +48,13 @@ public class Client : MonoBehaviour {
                 sender.RemoteEndPoint.ToString()));
         Debug.Log("Start");
         Send("This is a test");
+
+        byte[] msg = new byte[1000];
+        sender.Receive(msg);
+        string result = Encoding.ASCII.GetString(msg);
+        var strs = result.Split(' ');
+        Debug.Log(result);
+        pColor.GetComponent<Image>().color = new Color(float.Parse(strs[1]), float.Parse(strs[2]), float.Parse(strs[3]));
 	}
 
     public void ABtnSend()
@@ -81,6 +85,7 @@ public class Client : MonoBehaviour {
     {
         direction = 0;
         rotatedJoystick.SetActive(false);
+        Send();
         Debug.Log("joy off");
     }
 
