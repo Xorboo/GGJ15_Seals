@@ -65,7 +65,6 @@ public class AiController : MonoBehaviour
             {
                 case MobType.Melee:
                     controller.Velocity.Set(GetDX(), 0, GetDZ());
-                    controller.Velocity.Normalize();
                     break;
                 case MobType.Ranged:
                     float dx = Mathf.Abs(GetDX()) - maxX;
@@ -74,6 +73,7 @@ public class AiController : MonoBehaviour
                 case MobType.Boss:
                     break;
             }
+            controller.Velocity.Normalize();
             yield return new WaitForSeconds(0.3f);
         }
     }
