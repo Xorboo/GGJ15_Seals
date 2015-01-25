@@ -151,8 +151,8 @@ public class Serv : MonoBehaviour
             if(ukeys[i].moveY>0)
                 ky += 1.0f;
         }
-        res.x /= kx;
-        res.y /= ky;
+        res.x /= Mathf.Max(kx, 1);
+        res.y /= Mathf.Max(ky, 1);
         return res;
     }
 

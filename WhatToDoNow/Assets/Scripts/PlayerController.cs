@@ -7,18 +7,13 @@ public class PlayerController : MonoBehaviour {
 
     UnitController controller;
     GameController gameController;
-	// Use this for initialization
+
 	void Start() {
         controller = GetComponent<UnitController>();
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         StartCoroutine("MoveCoroutine");
 	}
-
-    void Update()
-    {
-    }
-
 
     IEnumerator MoveCoroutine()
     {

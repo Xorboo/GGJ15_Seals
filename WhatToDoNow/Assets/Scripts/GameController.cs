@@ -3,13 +3,9 @@ using System.Collections;
 
 public class GameController : MonoBehaviour
 {
-    /*public enum PressedButton
-    {
-        A ==1, B ==2
-    };*/
     Serv server;
-    
-    public void Start()
+
+    void Awake()
     {
         server = GetComponent<Serv>();
     }
