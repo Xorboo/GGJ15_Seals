@@ -84,7 +84,7 @@ public class Serv : MonoBehaviour
         while(true) // нехорошо, ну и хрен с ними
         {
             int k = s.Receive(tempbuffer); // received byte array from client
-            if (k>0)
+            if (k > 0)
             {
                 strResult = Encoding.ASCII.GetString(tempbuffer);
                 //if (strResult != "")
@@ -102,6 +102,10 @@ public class Serv : MonoBehaviour
                 }
                 strResult = "";
             }
+            /*else
+            {
+                s.Close();
+            }*/
                 
             //}
         }
@@ -130,6 +134,7 @@ public class Serv : MonoBehaviour
             //}
             //Thread.Sleep(100);
         }
+        
     }
 
     void Update()
@@ -140,7 +145,13 @@ public class Serv : MonoBehaviour
     void OnApplicationQuit()
     { // stop listening thread
         stopListening(); // wait fpr listening thread to terminate (max. 500ms)
-        mThread.Join(500);
+        for (int i = 0; i < clients.Count; i++)
+        {
+            clients[i].Close();
+        }
+        tcp_Listener.Stop();
+        mThread.Join(1000);
+        mThread.Abort();
     }
 
     void SendColor(Socket s, int number)
