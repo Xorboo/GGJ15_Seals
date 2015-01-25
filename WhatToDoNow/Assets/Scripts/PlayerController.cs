@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour {
     {
         while (true)
         {
-            UpdateControls();
+            UpdateControlsKeyboard();
+
             if (controller.CanAttack())
             {
                 bool pressShoot = gameController.GetButtonPressed(2, buttonPressTime);
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour {
                 }
 
                 if (pressShoot)
-                    controller.Attack(controller.attacks[0].trigger);
+                    controller.Attack(controller.attacks[currentAttack].trigger);
 
                 if (pressSwitch)
                 {
@@ -75,8 +76,17 @@ public class PlayerController : MonoBehaviour {
 
         if (controller.CanAttack())
         {
-            if (Input.GetMouseButton(0))
-                controller.Attack(controller.attacks[0].trigger);
+            if (Input.GetKey(KeyCode.Z))
+                controller.Attack(controller.attacks[currentAttack].trigger);
+
+            if (Input.GetKey(KeyCode.X))
+            {
+                if (controller.SwitchWeapon())
+                {
+                    controller.SetAttackPause(weaponSwitchPause);
+                    currentAttack = (currentAttack + 1) % controller.attacks.Count;
+                }
+            }
         }
     }
 }

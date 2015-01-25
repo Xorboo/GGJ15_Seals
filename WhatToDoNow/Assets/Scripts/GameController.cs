@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
 
     public bool GetButtonPressed(int btn, float maxTimeout)
     {
-        return server.ButtonNumChance(btn, maxTimeout) < Random.value;
+        return server.ButtonNumChance(btn, maxTimeout) >= Random.value;
     }
 
 }

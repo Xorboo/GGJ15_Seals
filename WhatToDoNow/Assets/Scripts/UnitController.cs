@@ -34,14 +34,17 @@ public class UnitController : MonoBehaviour
     float attackTime = 0f;
     float moveTime = 0f;
 
-    void Start()
+    void Awake()
     {
         animatorMove = transform.Find("MoveSprite").GetComponent<Animator>();
         if (isPlayer)
         {
             animatorAttack = transform.Find("AttackSprite").GetComponent<Animator>();
         }
+    }
 
+    void Start()
+    {
         health = maxHealth;
     }
 
@@ -104,8 +107,9 @@ public class UnitController : MonoBehaviour
         pos.y += attack.position.y * transform.localScale.y;
         pos.z += attack.position.z * transform.localScale.z;
         var obj = Instantiate(attack.bullet, pos, Quaternion.identity) as GameObject;
+        obj.transform.localScale = transform.localScale;
 
-        obj.transform.parent = transform;
+        //obj.transform.parent = transform;
         obj.tag = isPlayer ? "PlayerAttack" : "BotAttack";
         Destroy(obj, attack.destroyTime);
     }
@@ -126,9 +130,9 @@ public class UnitController : MonoBehaviour
         {
             health = 0;
             isDead = true;
-            animatorMove.SetBool("IsDead", true);
+            animatorMove.SetTrigger("IsDead");
             if (animatorAttack != null)
-                animatorAttack.SetBool("IsDead", true);
+                animatorAttack.SetTrigger("IsDead");
         }
     }
 
