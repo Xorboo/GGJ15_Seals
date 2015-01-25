@@ -19,14 +19,14 @@ using System.Text;
 public class UserKeys// : MonoBehaviour
 {
     public int moveX=0, moveY=0;
-    public int numButton=0;
+    //public int numButton=0;
     //public DateTime dt = DateTime.Now;
-    public float timeA = 0.0f;
-    public float timeB = 0.0f;
+    public int timeA = 0;
+    public int timeB = 0;
     public UserKeys()
     {
         moveX = 0; moveY = 0;
-        numButton = 0;
+        //numButton = 0;
         //dt = DateTime.Now;
     }
     // "1,1,1" или "-1,-1,2" или "0,0,0"
@@ -34,7 +34,7 @@ public class UserKeys// : MonoBehaviour
     private void setDatasFromString(String str)
     {
         List<String> lst = str.Split(',').ToList();
-        lst.Remove("");
+        //lst.Remove("");
         switch (Convert.ToInt32(lst[0]))
         {
             case 1: moveX = 0; moveY = 1; break;
@@ -45,18 +45,19 @@ public class UserKeys// : MonoBehaviour
         };
         int b2 = Convert.ToInt32(lst[2]);
         int b1 = Convert.ToInt32(lst[1]);
+        int curr = Utils.CurrentTimeMs();
         if (b1 != 0)
         {
-            timeA = Time.time;
-            numButton = b1;
+            timeA = curr; // Time.time; //
+            //numButton = 1;
         }
         if (b2 != 0)
         {
-            timeB = Time.time;
-            numButton = b2;
+            timeB = curr; //Time.time; //
+            //numButton = 2;
         }
-        if ((b2 == b1) && (b1 == 0))
-            numButton = 0;
+        //if ((b2 == b1) && (b1 == 0))
+        //   numButton = 0;
     }
     public UserKeys(String str)
     {
