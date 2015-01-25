@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour {
     {
         while (true)
         {
-            UpdateControlsKeyboard();
+            UpdateControls();
             yield return new WaitForSeconds(moveUpdateTime);
         }
     }
