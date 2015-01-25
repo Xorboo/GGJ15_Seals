@@ -64,24 +64,30 @@ public class Serv : MonoBehaviour
     
     void WorkWithClient(Socket s, int num)
     {
+        Debug.Log("Create new thread " + num + "; with socket" + s);
         byte[] tempbuffer = new byte[10000];
         string strResult = "";
         s.Receive(tempbuffer); // received byte array from client
         strResult = Encoding.ASCII.GetString(tempbuffer);
-        Debug.Log("Recieved: " + strResult);
+        Debug.Log("Recieved0: " + strResult);
         clientNames.Add(num, "Player" + num); //strResult);
-        SendColor(s, num);
+        //SendColor(s, num);
         
         while(true) // нехорошо, ну и хрен с ними
         {
             s.Receive(tempbuffer); // received byte array from client
             strResult = Encoding.ASCII.GetString(tempbuffer);
-            Debug.Log("Recieved: " + strResult);
-            /*lock (ukeys)
-            //lock(((ICollection)ukeys).SyncRoot)
+            if (strResult != "")
             {
-                ukeys[num].ReRead(strResult);
-            }*/
+                Debug.Log("Recieved: " + strResult);
+
+                lock (ukeys)
+                //lock(((ICollection)ukeys).SyncRoot)
+                {
+                    ukeys[num].ReRead(strResult);
+                }
+                strResult = "";
+            }
         }
     }
     void ListenClients()
@@ -94,16 +100,17 @@ public class Serv : MonoBehaviour
         Thread thread;
         while (mRunning)
         {
-            if (tcp_Listener.Pending())
-            {
+            /*if (tcp_Listener.Pending())
+            {*/
                 Socket s = tcp_Listener.AcceptSocket();
                 clients.Add(s);
                 ukeys.Add(el);
                 thread = new Thread(() => WorkWithClient(s,num));
-                Debug.Log("Create new thread "+num+"; with socket"+s);
+                thread.Start();
+                //new Thread(delegate() { WorkWithClient(s, num); }).Start();
                 num++;
-            }
-            Thread.Sleep(100);
+            //}
+            //Thread.Sleep(100);
         }
     }
 
@@ -129,6 +136,38 @@ public class Serv : MonoBehaviour
     void SendText(Socket s, string text)
     {
         s.Send(Encoding.ASCII.GetBytes(text));
+    }
+
+    public Vector3 MainMoving()
+    {
+        Vector3 res = new Vector3(0.0f, 0.0f, 0.0f);
+        float kx=0.0f, ky=0.0f;
+        for(int i=0; i> ukeys.Count; i++)
+        {
+            res.x += ukeys[i].moveX;
+            if(ukeys[i].moveX>0)
+                kx += 1.0f;
+            res.z += ukeys[i].moveY;
+            if(ukeys[i].moveY>0)
+                ky += 1.0f;
+        }
+        res.x /= kx;
+        res.y /= ky;
+        return res;
+    }
+
+    public float ButtonNumChance(int button, float maxTimeout)
+    {
+        float res = 0.0f;
+        float currTime = Time.time;
+        float btnTime = 0.0f;
+        for (int i = 0; i < ukeys.Count; i++)
+        {
+            btnTime = (button==1) ? ukeys[i].timeA : ukeys[i].timeB;
+            res += (currTime - btnTime < maxTimeout) ? 1 : 0;
+        }
+        float ucount = ukeys.Count > 0 ? ukeys.Count : 1.0f;
+        return Mathf.Pow(res/ucount,4);
     }
 
 }
