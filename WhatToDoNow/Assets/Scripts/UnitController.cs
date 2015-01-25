@@ -63,6 +63,7 @@ public class UnitController : MonoBehaviour
             attackTime = attackCooldown;
 
             // TODO Attack
+
         }
     }
     private void Flip()
