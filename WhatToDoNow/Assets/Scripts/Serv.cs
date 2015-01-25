@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public class Serv : MonoBehaviour
 {
-    public List<Color> playerColors;
+    public List<Color> playerColors = new List<Color>();
 
     private List<Socket> clients = new List<Socket>();
     public Dictionary<int, String> clientNames = new Dictionary<int, string>();
@@ -26,6 +26,10 @@ public class Serv : MonoBehaviour
 
     public void StartServer()
     {
+        for (int i = 0; i < 100; i++)
+        {
+            playerColors.Add(Utils.RandomColor());
+        }
         mRunning = true;
         ThreadStart ts = new ThreadStart(ListenClients);// (Receive);
         mThread = new Thread(ts);
@@ -142,7 +146,7 @@ public class Serv : MonoBehaviour
     void SendColor(Socket s, int number)
     {
         Debug.Log("Sending...");
-        Color color = number < playerColors.Count ? playerColors[number] : Utils.RandomColor();
+        Color color = /*number < playerColors.Count ?*/ playerColors[number-1];// : Utils.RandomColor();
         SendText(s, NetUtils.ColorMessage(color));
         Debug.Log("Sent!");
     }
