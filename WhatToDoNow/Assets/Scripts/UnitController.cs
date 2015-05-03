@@ -20,6 +20,7 @@ public class UnitController : MonoBehaviour
     public float moveAfterAttackPause = 0.4f;
     public float maxHealth = 100;
     public bool isPlayer = false;
+    public float redTime = 0.5f;
     public List<AttackType> attacks = new List<AttackType>();
 
     public Vector3 Velocity = new Vector3();
@@ -33,6 +34,8 @@ public class UnitController : MonoBehaviour
     float health;
     float attackTime = 0f;
     float moveTime = 0f;
+
+    Color spriteColor;
 
     void Awake()
     {
@@ -133,9 +136,33 @@ public class UnitController : MonoBehaviour
             animatorMove.SetTrigger("IsDead");
             if (animatorAttack != null)
                 animatorAttack.SetTrigger("IsDead");
+            if (!isPlayer)
+            {
+                GetComponent<BoxCollider>().enabled = false;
+                Destroy(gameObject, 5f);
+                if (GetComponent<BossScript>() != null)
+                {
+                    GameObject.Find("TehSprite").GetComponent<SpriteRenderer>().enabled = true;
+                }
+            }
         }
+
+        spriteColor = GetRenderer().color;
+        GetRenderer().color = Color.red;
+        StartCoroutine("ColorBack");
     }
 
+    SpriteRenderer GetRenderer()
+    {
+        var animator = isPlayer ? animatorAttack : animatorMove;
+        return  animator.GetComponent<SpriteRenderer>();
+    }
+
+    IEnumerator ColorBack()
+    {
+        yield return new WaitForSeconds(redTime);
+        GetRenderer().color = spriteColor;
+    }
     public bool SwitchWeapon()
     {
         if (animatorAttack.GetCurrentAnimatorStateInfo(0).IsName("Katana Idle") ||

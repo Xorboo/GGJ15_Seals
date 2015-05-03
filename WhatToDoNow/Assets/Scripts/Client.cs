@@ -39,7 +39,7 @@ public class Client : MonoBehaviour {
         pName.GetComponent<Text>().text = "Ururu";
         rotatedJoystick = GameObject.Find("Joy_Rot_Button");
         rotatedJoystick.SetActive(false);
-        IPAddress ipAddress = IPAddress.Parse("10.10.8.155");
+        IPAddress ipAddress = IPAddress.Parse("10.10.8.39");
         IPEndPoint remoteEP = new IPEndPoint(ipAddress,1234);
         sender = new Socket(AddressFamily.InterNetwork, 
             SocketType.Stream, ProtocolType.Tcp );

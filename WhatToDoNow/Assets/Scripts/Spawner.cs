@@ -17,6 +17,7 @@ public class Spawner : MonoBehaviour {
     public List<Wave> lstWave = new List<Wave>();
     public float nextWaveTime = 2f;
     public float timeBetwenSpawns = 1f;
+    public float initWaveTime;
 
     public GameObject meleeObj, 
                       rangeObj, 
@@ -36,6 +37,7 @@ public class Spawner : MonoBehaviour {
 
     IEnumerator StartWaves()
     {
+        yield return new WaitForSeconds(initWaveTime);
         //while (true)
         for(int i=0; i<lstWave.Count; i++)
         {

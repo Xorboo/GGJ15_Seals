@@ -198,7 +198,7 @@ public class Serv : MonoBehaviour
             for (int i = 0; i < ukeys.Count; i++)
             {
                 int btnTime = (button == 1) ? ukeys[i].timeA : ukeys[i].timeB;
-                res += (currTime - btnTime < maxTimeout) ? 1 : 0;
+                res += (currTime - btnTime < maxTimeout * 1000) ? 1 : 0;
             }
         //}
         return Mathf.Pow(res/ucount,4);

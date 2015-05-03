@@ -23,7 +23,10 @@ public class PlayerController : MonoBehaviour {
     {
         while (true)
         {
-            UpdateControlsKeyboard();
+            if (gameController.initServer)
+                UpdateControls();
+            else
+                UpdateControlsKeyboard();
 
             if (controller.CanAttack())
             {
@@ -39,7 +42,7 @@ public class PlayerController : MonoBehaviour {
                 }
 
                 if (pressShoot)
-                    controller.Attack(controller.attacks[currentAttack].trigger);
+                    MakeAttack();
 
                 if (pressSwitch)
                 {
@@ -53,6 +56,14 @@ public class PlayerController : MonoBehaviour {
             }
             yield return new WaitForSeconds(moveUpdateTime);
         }
+    }
+
+    void MakeAttack()
+    {
+        controller.Attack(controller.attacks[currentAttack].trigger);
+        string text = currentAttack == 0 ? "Sword_" : "Gun_";
+        text += Random.Range(1, 3);
+        GameObject.Find(text).GetComponent<AudioSource>().Play();
     }
 
     void UpdateControls()
@@ -77,7 +88,7 @@ public class PlayerController : MonoBehaviour {
         if (controller.CanAttack())
         {
             if (Input.GetKey(KeyCode.Z))
-                controller.Attack(controller.attacks[currentAttack].trigger);
+                MakeAttack();
 
             if (Input.GetKey(KeyCode.X))
             {

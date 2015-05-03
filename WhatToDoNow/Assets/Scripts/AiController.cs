@@ -21,6 +21,7 @@ public class AiController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         StartCoroutine("DirectionUpdate");
+        GameObject.Find("Laugh_" + Random.Range(1, 8)).GetComponent<AudioSource>().Play();
     }
 
     void Update()
