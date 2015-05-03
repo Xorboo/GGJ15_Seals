@@ -1,4 +1,6 @@
 # Jumuzzy
+Game for Global Game Jam 2015 by Galactic Seals
+
 ## Story
 A game about a special forces seal, who got lost in the wild jungle after his squad were captured and recklessly killed by cruel raccoons and he was the only one who got away. After weeks of wandering around, he got biten by The Poisonous Snake. After that his personality was split into parts. And while he was barely able to control himself, he were attacked by hordes of evil raccoons. Will he be able to get himself together and seal with this situation? His multiple minds will have to cooperate with each other to decide what to do with the only body they have. 
 ## Description
